@@ -1,67 +1,104 @@
-import React, { useState } from 'react';
-import { GoogleLogin } from '@react-oauth/google';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faLock, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import googleLogo from '../assets/google.png';
+import { Navigate } from 'react-router-dom';
+import Navbar from "../components/navbar"
+import Banner from "../components/banner"
+import Footer from "../components/footer"
 
 const Signup = () => {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const [redirect, setRedirect] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleEmailSignup = async () => {
+  const googleSignInRef = useRef(null);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSignup = async () => {
     try {
-      // Send signup request to the backend
-      const response = await axios.post('https://supreme-garbanzo-ggw96rjw79phvvpv-5000.app.github.dev/api/auth/signup', { email, password });
-      console.log('Signup successful:', response.data);
-      
-      // Redirect to profile page after successful signup
-      navigate('/profile');
+      const response = await axios.post('http://localhost:5001/api/auth/signup', form, { withCredentials: true });
+      alert(response.data.message || "Signup successful");
+      setForm({ name: '', email: '', password: '' });
+      setRedirect(true);
     } catch (error) {
-      console.error('Email signup failed:', error.response?.data || error.message);
-      setError(error.response?.data?.message || 'An error occurred during signup.');
+      console.error(error);
+      setError(error.response?.data?.message || "Signup failed");
     }
   };
 
-  const handleGoogleSignup = async (credentialResponse) => {
+  const handleLogin = async () => {
     try {
-      // Send Google token to backend for signup
-      const response = await axios.post('https://supreme-garbanzo-ggw96rjw79phvvpv-5000.app.github.dev/api/auth/google-signup', {
-        token: credentialResponse.credential,
-      });
-      console.log('Google signup successful:', response.data);
-      
-      // Redirect to profile page after successful Google signup
-      navigate('/profile');
+      const response = await axios.post('http://localhost:5001/api/auth/login', form, { withCredentials: true });
+      alert(response.data.message || "Login successful");
+      setForm({ name: '', email: '', password: '' });
+      setRedirect(true);
     } catch (error) {
-      console.error('Google signup failed:', error.response?.data || error.message);
-      setError(error.response?.data?.message || 'An error occurred during Google signup.');
+      console.error(error);
+      setError(error.response?.data?.message || "Login failed");
     }
   };
+
+  const handleGoogleLogin = () => {
+    window.open("http://localhost:5001/api/auth/google", "_self");
+  };
+
+  useEffect(() => {
+    const googleSignInButton = googleSignInRef.current;
+    if (googleSignInButton) {
+      googleSignInButton.addEventListener('click', handleGoogleLogin);
+    }
+    return () => {
+      if (googleSignInButton) {
+        googleSignInButton.removeEventListener('click', handleGoogleLogin);
+      }
+    };
+  }, []);
+
+  if (redirect) {
+    return <Navigate to="/profile" replace />;
+  }
 
   return (
-    <div className="signup-page">
-      <h2>Sign Up</h2>
-      {error && <p className="error">{error}</p>}
-      <GoogleLogin
-        onSuccess={handleGoogleSignup}
-        onError={() => setError('Google signup failed. Please try again.')}
-      />
-      <div className="email-signup">
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button onClick={handleEmailSignup}>Sign Up</button>
+    <div>
+      <Banner />
+      <Navbar />
+    <div className="signup-container">
+      <h2 className="header">Signup</h2>
+      <form className="inputs">
+        <div className="input">
+          <FontAwesomeIcon className="input-icon" icon={faUser} />
+          <input type="text" name="name" placeholder="Name" value={form.name} onChange={handleChange} required />
+        </div>
+        <div className="input">
+          <FontAwesomeIcon className="input-icon" icon={faEnvelope} />
+          <input type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
+        </div>
+        <div className="input">
+          <FontAwesomeIcon className="input-icon" icon={faLock} />
+          <input type="password" name="password" placeholder="Password" value={form.password} onChange={handleChange} required />
+        </div>
+      </form>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <div className="submit-container">
+        <button className="submit" onClick={handleSignup}>Signup</button>
+        <button className="submit" onClick={handleLogin}>Login</button>
       </div>
+      <div className="separator">
+        <hr className="line" />
+        <span>or</span>
+        <hr className="line" />
+      </div>
+      <div ref={googleSignInRef} onClick={handleGoogleLogin} className="google-signin">
+        <img src={googleLogo} alt="Google Logo" className="google-logo" />
+        Login with Google
+      </div>
+    </div>
+    <Footer />
     </div>
   );
 };

@@ -1,55 +1,98 @@
-import React, { useState } from "react";
-import { FaHeart, FaShoppingCart, FaBars, FaTimes } from "react-icons/fa"; // Icons for wishlist, cart, and menu
-
+import React, { useState, useEffect } from "react";
+import { FaHeart, FaShoppingCart, FaUser, FaBars, FaTimes } from "react-icons/fa";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // Handle screen size changes to close the menu on wider screens
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   // Toggle mobile menu
   const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
+    setIsMobileMenuOpen((prev) => !prev);
   };
 
   return (
-    <nav className="navbar">
-      {/* Logo Section */}
-      <div className="logo">
-        <h1>ShopSphere</h1>
-      </div>
+    <>
+      <nav className="navbar">
+        {/* Logo and Title */}
+        <div className="logo">
+          <h1>ShopSphere</h1>
+        </div>
 
-      {/* Desktop Navigation Links */}
-      <ul className={`nav-links ${isMobileMenuOpen ? "mobile-menu" : ""}`}>
-        <li>
-          <a href="/">Home</a>
-        </li>
-        <li>
-          <a href="/store">Store</a>
-        </li>
-        <li>
-          <a href="/contact">Contact</a>
-        </li>
-      </ul>
+        {/* Navigation Links */}
+        <ul className="nav-links">
+          <li>
+            <a href="/">Home</a>
+          </li>
+          <li>
+            <a href="/store">Store</a>
+          </li>
+          <li>
+            <a href="/contact">Contact</a>
+          </li>
+        </ul>
 
-      {/* Icons for Wishlist and Cart */}
-      <ul className="nav-icons">
-        <li>
-          <a href="/wishlist"> <FaHeart className="icon" title="Wishlist" /> </a>
-        </li>
-        <li>
-          <a href="/cart"> <FaShoppingCart className="icon" title="Cart" /> </a>
-        </li>
-      </ul>
+        {/* Icons for Wishlist, Cart, and Profile */}
+        <ul className="nav-icons">
+          <li>
+            <a href="/wishlist">
+              <FaHeart className="icon" title="Wishlist" />
+            </a>
+          </li>
+          <li>
+            <a href="/cart">
+              <FaShoppingCart className="icon" title="Cart" />
+            </a>
+          </li>
+          <li>
+            <a href="/signup">
+              <FaUser className="icon" title="Profile" />
+            </a>
+          </li>
+        </ul>
 
-      {/* Mobile Hamburger Menu Icon */}
-      <div className="hamburger-menu" 
-        onClick={toggleMobileMenu} 
-        aria-label="Toggle navigation menu" 
-        aria-expanded={isMobileMenuOpen} 
-        role="button" >
-      {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
-      </div>
+        {/* Hamburger Menu Icon */}
+        <div
+          className="hamburger-menu"
+          onClick={toggleMobileMenu}
+          aria-label="Toggle navigation menu"
+          aria-expanded={isMobileMenuOpen}
+          role="button"
+        >
+          {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
+        </div>
+      </nav>
 
-    </nav>
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="mobile-menu">
+          <ul>
+            <li>
+              <a href="/">Home</a>
+            </li>
+            <li>
+              <a href="/store">Store</a>
+            </li>
+            <li>
+              <a href="/contact">Contact</a>
+            </li>
+          </ul>
+        </div>
+      )}
+    </>
   );
 };
 

@@ -11,9 +11,6 @@ const Store = ({ cart, wishlist, addToCart, addToWishlist }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showTick, setShowTick] = useState({ id: null, type: null });
 
-  // API URL (Change this to your backend API endpoint)
-  const apiUrl = "https://supreme-garbanzo-ggw96rjw79phvvpv-5000.app.github.dev";
-
   // Handle category selection
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
@@ -21,34 +18,38 @@ const Store = ({ cart, wishlist, addToCart, addToWishlist }) => {
   };
 
   // Handle adding to cart
-  const handleAddToCart = async (item) => {
-    try {
-      // Send POST request to API to add item to cart
-      await axios.post(`${apiUrl}/add-to-cart`, item);
-
-      // Update local cart state and UI
-      addToCart(item);
-      setShowTick({ id: item.title, type: "cart" });
-      clearTick();
-    } catch (error) {
-      console.error("Error adding item to cart:", error);
+const handleAddToCart = async (item) => {
+  try {
+    const itemExistsInCart = cart.some((cartItem) => cartItem.title === item.title);
+    if (itemExistsInCart) {
+      alert("This item is already in your cart.");
+      return;
     }
-  };
+    await axios.post(`http://localhost:5001/api/cart/add-to-cart`, item);
+    addToCart(item);
+    setShowTick({ id: item.title, type: "cart" });
+    clearTick();
+  } catch (error) {
+    console.error("Error adding item to cart:", error);
+  }
+};
 
-  // Handle adding to wishlist
-  const handleAddToWishlist = async (item) => {
-    try {
-      // Send POST request to API to add item to wishlist
-      await axios.post(`${apiUrl}/add-to-wishlist`, item);
-
-      // Update local wishlist state and UI
-      addToWishlist(item);
-      setShowTick({ id: item.title, type: "wishlist" });
-      clearTick();
-    } catch (error) {
-      console.error("Error adding item to wishlist:", error);
+// Handle adding to wishlist
+const handleAddToWishlist = async (item) => {
+  try {
+    const itemExistsInWishlist = wishlist.some((wishlistItem) => wishlistItem.title === item.title);
+    if (itemExistsInWishlist) {
+      alert("This item is already in your wishlist.");
+      return;
     }
-  };
+    await axios.post(`http://localhost:5001/api/wishlist/add-to-wishlist`, item);
+    addToWishlist(item);
+    setShowTick({ id: item.title, type: "wishlist" });
+    clearTick();
+  } catch (error) {
+    console.error("Error adding item to wishlist:", error);
+  }
+};
 
   // Clear tick after a delay
   const clearTick = () => {

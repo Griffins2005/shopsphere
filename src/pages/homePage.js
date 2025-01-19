@@ -2,7 +2,7 @@ import React from 'react';
 import Navbar from '../components/navbar';
 import Banner from '../components/banner'
 import Footer from '../components/footer';
-import home from '../assets/home.png'
+import home from '../assets/home.png';
 
 function Homepage() {
   return (
@@ -11,7 +11,7 @@ function Homepage() {
       <Navbar />
       <div className='hero'>
         <p>Elevate Your Home with Shopsphere's Stylish Collections!</p>
-        <button className='explore'>Explore Now</button>
+        {/* <button className='explore'>Explore Now</button> */}
       </div>
       <div>
         <h1>Welcome to Shopsphere - Your Destination for Home Essentials</h1>
