@@ -29,7 +29,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await axios.get("https://shop-sphere-backend-sigma.vercel.app/api/user/me", {
+        const response = await axios.get("https://shopsphere-backend-app.vercel.app/api/user/me", {
           withCredentials: true,
         });
 
@@ -79,7 +79,7 @@ const Profile = () => {
     event.preventDefault();
     try {
       const response = await axios.put(
-        "https://shop-sphere-backend-sigma.vercel.app/api/user/me",
+        "https://shopsphere-backend-app.vercel.app/api/user/me",
         formData,
         {
           withCredentials: true,

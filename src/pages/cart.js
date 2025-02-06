@@ -9,7 +9,7 @@ const Cart = ({ onProceedToCheckout }) => {
   const [cartItems, setCartItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [error, setError] = useState("");
-  const apiUrl = "https://shop-sphere-backend-sigma.vercel.app";
+  const apiUrl = "https://shopsphere-backend-app.vercel.app";
 
   useEffect(() => {
     const fetchCartItems = async () => {

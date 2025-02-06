@@ -18,7 +18,7 @@ const ContactUs = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://shop-sphere-backend-sigma.vercel.app/contact', {
+      const response = await fetch('https://shopsphere-backend-app.vercel.app/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

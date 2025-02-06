@@ -7,7 +7,7 @@ import wishImage from "../assets/wish-image.png";
 
 const Wishlist = ({ onAddToCart }) => {
   const [wishlist, setWishlist] = useState([]);
-  const apiUrl = "https://shop-sphere-backend-sigma.vercel.app";
+  const apiUrl = "https://shopsphere-backend-app.vercel.app";
 
   useEffect(() => {
     const fetchWishlist = async () => {

@@ -23,7 +23,7 @@ const handleAddToCart = async (item) => {
       alert("This item is already in your cart.");
       return;
     }
-    await axios.post(`https://shop-sphere-backend-sigma.vercel.app/api/cart/add-to-cart`, item);
+    await axios.post(`https://shopsphere-backend-app.vercel.app/api/cart/add-to-cart`, item);
     addToCart(item);
     setShowTick({ id: item.title, type: "cart" });
     clearTick();
@@ -39,7 +39,7 @@ const handleAddToWishlist = async (item) => {
       alert("This item is already in your wishlist.");
       return;
     }
-    await axios.post(`https://shop-sphere-backend-sigma.vercel.app/api/wishlist/add-to-wishlist`, item);
+    await axios.post(`https://shopsphere-backend-app.vercel.app/api/wishlist/add-to-wishlist`, item);
     addToWishlist(item);
     setShowTick({ id: item.title, type: "wishlist" });
     clearTick();

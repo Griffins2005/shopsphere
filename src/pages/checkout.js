@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 
@@ -11,6 +11,14 @@ const CheckoutForm = ({ selectedItems, onPaymentSuccess }) => {
   const [formData, setFormData] = useState({ address: "" });
   const [error, setError] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://js.stripe.com/v3";
+    script.async = true;
+    document.body.appendChild(script);
+  },[]);
+
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, address: e.target.value });
@@ -30,7 +38,7 @@ const CheckoutForm = ({ selectedItems, onPaymentSuccess }) => {
     const cardElement = elements.getElement(CardElement);
   
     try {
-      const response = await fetch("https://shop-sphere-backend-sigma.vercel.app/api/checkout/create-payment-intent", {
+      const response = await fetch("https://shopsphere-backend-app.vercel.app/api/checkout/create-payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount: totalAmount, currency: "usd" }),

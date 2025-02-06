@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import './index.css';
 
 import Homepage from './pages/homePage';
@@ -11,8 +10,6 @@ import Cart from './pages/cart';
 import Checkout from './pages/checkout';
 import Signup from './pages/signup';
 import Profile from './pages/profile';
-
-const clientId = '533760557307-7lm98vo04v0b915h2na1snh7t99vcvda.apps.googleusercontent.com';
 
 function App() {
   const [cart, setCart] = useState([]);
@@ -44,9 +41,7 @@ function App() {
   console.log(wishlist);
 
   return (
-    <GoogleOAuthProvider clientId={clientId}>
-    <Router>
-      <div>
+      <div className="App" >
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/contact" element={<Contact />} />
@@ -58,8 +53,6 @@ function App() {
           <Route path="/checkout" element={<Checkout selectedItems={cart} onPaymentSuccess={() => alert('Payment successful!')} />} />
         </Routes>
       </div>
-    </Router>
-    </GoogleOAuthProvider>
   );
 }
 

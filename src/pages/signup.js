@@ -12,7 +12,7 @@ const Login = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.open("https://shop-sphere-backend-sigma.vercel.app/api/auth/google", "_self");
+    window.open("https://shopsphere-backend-app.vercel.app/api/auth/google", "_self");
     handleSuccessLogin()
   };
 
