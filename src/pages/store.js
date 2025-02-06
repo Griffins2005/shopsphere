@@ -2,22 +2,20 @@ import React, { useState } from "react";
 import Navbar from '../components/navbar';
 import Banner from '../components/banner';
 import Footer from '../components/footer';
-import productsData from "../context/products"; // Importing the products data
+import productsData from "../context/products"; 
 import { FaHeart, FaCheck } from "react-icons/fa";
-import axios from 'axios'; // Importing axios for API requests
+import axios from 'axios';
 
 const Store = ({ cart, wishlist, addToCart, addToWishlist }) => {
   const [selectedCategory, setSelectedCategory] = useState("Furniture");
   const [searchTerm, setSearchTerm] = useState("");
   const [showTick, setShowTick] = useState({ id: null, type: null });
 
-  // Handle category selection
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
-    setSearchTerm(""); // Reset search when switching categories
+    setSearchTerm("");
   };
 
-  // Handle adding to cart
 const handleAddToCart = async (item) => {
   try {
     const itemExistsInCart = cart.some((cartItem) => cartItem.title === item.title);
@@ -25,7 +23,7 @@ const handleAddToCart = async (item) => {
       alert("This item is already in your cart.");
       return;
     }
-    await axios.post(`http://localhost:5001/api/cart/add-to-cart`, item);
+    await axios.post(`https://shop-sphere-backend-sigma.vercel.app/api/cart/add-to-cart`, item);
     addToCart(item);
     setShowTick({ id: item.title, type: "cart" });
     clearTick();
@@ -34,7 +32,6 @@ const handleAddToCart = async (item) => {
   }
 };
 
-// Handle adding to wishlist
 const handleAddToWishlist = async (item) => {
   try {
     const itemExistsInWishlist = wishlist.some((wishlistItem) => wishlistItem.title === item.title);
@@ -42,7 +39,7 @@ const handleAddToWishlist = async (item) => {
       alert("This item is already in your wishlist.");
       return;
     }
-    await axios.post(`http://localhost:5001/api/wishlist/add-to-wishlist`, item);
+    await axios.post(`https://shop-sphere-backend-sigma.vercel.app/api/wishlist/add-to-wishlist`, item);
     addToWishlist(item);
     setShowTick({ id: item.title, type: "wishlist" });
     clearTick();
@@ -51,12 +48,10 @@ const handleAddToWishlist = async (item) => {
   }
 };
 
-  // Clear tick after a delay
   const clearTick = () => {
     setTimeout(() => setShowTick({ id: null, type: null }), 2000);
   };
 
-  // Filter items based on selected category and search term
   const selectedItems = productsData
     .find((category) => category.category === selectedCategory)
     ?.items.filter((item) =>

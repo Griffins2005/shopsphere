@@ -1,124 +1,87 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from "react";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 
-const Checkout = ({ selectedItems, onPaymentSuccess }) => {
-  const [formData, setFormData] = useState({
-    address: '',
-    cardNumber: '',
-    expiry: '',
-    cvv: '',
-  });
+const stripePromise = loadStripe("pk_test_51QpXGwDWc7o7twNLmONlHvrxVrQzLb9Ebmyp09rxX9CcRLwpPfo8HH5LqOnUunF5SlBY2aht0SbvgLQ72NueFxFU00JPDTLzIF");
 
-  const [error, setError] = useState('');
+const CheckoutForm = ({ selectedItems, onPaymentSuccess }) => {
+  const stripe = useStripe();
+  const elements = useElements();
 
-  // Handle form field changes
+  const [formData, setFormData] = useState({ address: "" });
+  const [error, setError] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
+
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, address: e.target.value });
+    setError("");
   };
 
-  // Simple validation to check if all fields are filled out
-  const validateForm = () => {
-    const { address, cardNumber, expiry, cvv } = formData;
-    if (!address || !cardNumber || !expiry || !cvv) {
-      return 'All fields are required.';
+  const totalAmount = useMemo(() => {
+    return selectedItems.reduce((total, item) => total + parseFloat(item.price), 0).toFixed(2);
+  }, [selectedItems]);
+
+  const handlePayment = async (e) => {
+    e.preventDefault();
+    setIsProcessing(true);
+  
+    if (!stripe || !elements) return;
+  
+    const cardElement = elements.getElement(CardElement);
+  
+    try {
+      const response = await fetch("https://shop-sphere-backend-sigma.vercel.app/api/checkout/create-payment-intent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: totalAmount, currency: "usd" }),
+      });
+  
+      const { clientSecret } = await response.json();
+  
+      const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: cardElement,
+          billing_details: { address: { line1: formData.address } },
+        },
+      });
+  
+      if (error) {
+        setError(error.message);
+      } else if (paymentIntent.status === "succeeded") {
+        alert("Payment Successful!");
+        onPaymentSuccess();
+      }
+    } catch (err) {
+      setError("Payment failed. Please try again.");
+    } finally {
+      setIsProcessing(false);
     }
-    if (!/^\d{16}$/.test(cardNumber)) {
-      return 'Card number must be 16 digits.';
-    }
-    if (!/\d{2}\/\d{2}/.test(expiry)) {
-      return 'Expiry date should be in MM/YY format.';
-    }
-    if (!/^\d{3}$/.test(cvv)) {
-      return 'CVV must be 3 digits.';
-    }
-    return '';
   };
-
-  const handlePayment = () => {
-    const validationError = validateForm();
-    if (validationError) {
-      setError(validationError);
-      return;
-    }
-
-    // Payment simulation
-    alert('Payment Successful!');
-    onPaymentSuccess(); // Call the callback to handle success (e.g., redirect or reset)
-  };
-
-  const calculateTotal = () => {
-    return selectedItems
-      .reduce((total, item) => total + parseFloat(item.price), 0)
-      .toFixed(2);
-  };
-
+  
   return (
-    <div className="checkout-container">
-      <h2>Checkout</h2>
-
-      {/* Display error message if validation fails */}
+    <form onSubmit={handlePayment} className="checkout-form">
+      <h3>Total: ${totalAmount}</h3>
       {error && <div className="error-message">{error}</div>}
+      <label>
+        Address:
+        <input type="text" name="address" value={formData.address} onChange={handleInputChange} required />
+      </label>
+      <label>
+        Card Details:
+        <CardElement className="card-input" />
+      </label>
+      <button type="submit" disabled={!stripe || isProcessing}>
+        {isProcessing ? "Processing..." : "Confirm Payment"}
+      </button>
+    </form>
+  );
+};
 
-      <div className="checkout-items">
-        <h3>Items to Purchase</h3>
-        {selectedItems.map((item) => (
-          <div key={item.id} className="checkout-item">
-            <span>{item.title}</span>
-            <span>${parseFloat(item.price).toFixed(2)}</span> {/* Assuming 'title' is correct */}
-          </div>
-        ))}
-      </div>
-
-      <div className="checkout-form">
-        <h3>Total: ${calculateTotal()}</h3>
-        <form>
-          <label>
-            Address:
-            <input
-              type="text"
-              name="address"
-              value={formData.address}
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-          <label>
-            Card Number:
-            <input
-              type="text"
-              name="cardNumber"
-              value={formData.cardNumber}
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-          <label>
-            Expiry Date:
-            <input
-              type="text"
-              name="expiry"
-              value={formData.expiry}
-              onChange={handleInputChange}
-              required
-              placeholder="MM/YY"
-            />
-          </label>
-          <label>
-            CVV:
-            <input
-              type="text"
-              name="cvv"
-              value={formData.cvv}
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-          <button type="button" onClick={handlePayment}>
-            Confirm Payment
-          </button>
-        </form>
-      </div>
-    </div>
+const Checkout = (props) => {
+  return (
+    <Elements stripe={stripePromise}>
+      <CheckoutForm {...props} />
+    </Elements>
   );
 };
 

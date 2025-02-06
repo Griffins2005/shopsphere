@@ -37,8 +37,6 @@ function App() {
       return prevWishlist;
     });
   };
-
-  // Function to handle proceeding to checkout
   const handleProceedToCheckout = (selectedItems) => {
     console.log('Proceeding to checkout with selected items:', selectedItems);
   };

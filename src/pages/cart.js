@@ -8,8 +8,8 @@ import cartImage from "../assets/cart.png";
 const Cart = ({ onProceedToCheckout }) => {
   const [cartItems, setCartItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [error, setError] = useState(""); // State for error messages
-  const apiUrl = "http://localhost:5001";
+  const [error, setError] = useState("");
+  const apiUrl = "https://shop-sphere-backend-sigma.vercel.app";
 
   useEffect(() => {
     const fetchCartItems = async () => {
@@ -34,14 +34,12 @@ const Cart = ({ onProceedToCheckout }) => {
     );
   };
 
-  // Calculate the total price of selected items
   const calculateTotal = () => {
     return selectedItems
       .reduce((total, item) => total + (parseFloat(item.price || 0) * item.quantity), 0)
       .toFixed(2);
   };
 
-  // Handle quantity increase
   const increaseQuantity = async (id) => {
     try {
       await axios.put(`${apiUrl}/api/cart/update-quantity`, { id, change: 1 });
@@ -56,7 +54,6 @@ const Cart = ({ onProceedToCheckout }) => {
     }
   };
 
-  // Handle quantity decrease
   const decreaseQuantity = async (id) => {
     try {
       const item = cartItems.find((item) => item._id === id);
@@ -80,7 +77,6 @@ const Cart = ({ onProceedToCheckout }) => {
     try {
       const response = await axios.delete(`${apiUrl}/api/cart/remove/${id}`);
       console.log("Item removed:", response.data);
-      // Update state by removing the deleted item
       setCartItems((prevItems) => prevItems.filter((item) => item._id !== id));
     } catch (error) {
       console.error("Error removing item from cart:", error);
@@ -88,14 +84,13 @@ const Cart = ({ onProceedToCheckout }) => {
     }
   };
 
-  // Handle checkout
   const handleCheckout = async () => {
     try {
       const response = await axios.post(`${apiUrl}/api/checkout`, {
         items: selectedItems,
       });
       console.log("Checkout successful:", response.data);
-      setSelectedItems([]); // Clear selected items after successful checkout
+      setSelectedItems([]);
       onProceedToCheckout(selectedItems);
     } catch (err) {
       console.error("Error during checkout:", err);

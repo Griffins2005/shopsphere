@@ -7,7 +7,7 @@ import wishImage from "../assets/wish-image.png";
 
 const Wishlist = ({ onAddToCart }) => {
   const [wishlist, setWishlist] = useState([]);
-  const apiUrl = "http://localhost:5001";
+  const apiUrl = "https://shop-sphere-backend-sigma.vercel.app";
 
   useEffect(() => {
     const fetchWishlist = async () => {
@@ -22,7 +22,6 @@ const Wishlist = ({ onAddToCart }) => {
     fetchWishlist();
   }, []);
 
-  // Handle removing item from wishlist
   const handleRemoveFromWishlist = async (id) => {
     try {
       await axios.delete(`${apiUrl}/api/wishlist/remove/${id}`);
@@ -32,12 +31,10 @@ const Wishlist = ({ onAddToCart }) => {
     }
   };
 
-  // Handle adding item to cart
   const handleAddToCart = async (item) => {
     try {
       await axios.post(`${apiUrl}/api/cart/add-to-cart`, item);
       onAddToCart(item);
-      // Optionally, remove from wishlist after adding to cart
       handleRemoveFromWishlist(item._id);
     } catch (error) {
       console.error("Error adding item to cart:", error);

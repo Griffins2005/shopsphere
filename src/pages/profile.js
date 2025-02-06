@@ -26,11 +26,10 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch user profile on component mount
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/api/user/me", {
+        const response = await axios.get("https://shop-sphere-backend-sigma.vercel.app/api/user/me", {
           withCredentials: true,
         });
 
@@ -57,10 +56,9 @@ const Profile = () => {
     fetchUserProfile();
   }, []);
 
-  // Handle form input change
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    const [section, field] = name.split("."); // handle nested fields like shipping.address
+    const [section, field] = name.split("."); 
     if (section && field) {
       setFormData({
         ...formData,
@@ -77,12 +75,11 @@ const Profile = () => {
     }
   };
 
-  // Handle form submission to update profile
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       const response = await axios.put(
-        "http://localhost:5001/api/user/me",
+        "https://shop-sphere-backend-sigma.vercel.app/api/user/me",
         formData,
         {
           withCredentials: true,
