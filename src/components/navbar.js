@@ -3,8 +3,6 @@ import { FaHeart, FaShoppingCart, FaUser, FaBars, FaTimes } from "react-icons/fa
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  // Handle screen size changes to close the menu on wider screens
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 768) {
@@ -19,7 +17,6 @@ const Navbar = () => {
     };
   }, []);
 
-  // Toggle mobile menu
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen((prev) => !prev);
   };
