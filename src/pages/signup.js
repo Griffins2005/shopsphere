@@ -4,16 +4,8 @@ import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const navigate = useNavigate();
-
-  const handleSuccessLogin = (token) => {
-    localStorage.setItem("token", token);
-    navigate("/profile");
-  };
-
   const handleGoogleLogin = () => {
     window.open("https://shopsphere-backend-app.vercel.app/api/auth/google", "_self");
-    handleSuccessLogin()
   };
 
   return (
