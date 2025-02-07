@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import Banner from "../components/banner";
 import axios from "axios";
 import cartImage from "../assets/cart.png";
 
-const Cart = ({ onProceedToCheckout }) => {
+const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
   const apiUrl = "https://shopsphere-backend-app.vercel.app";
 
   useEffect(() => {
@@ -84,18 +86,12 @@ const Cart = ({ onProceedToCheckout }) => {
     }
   };
 
-  const handleCheckout = async () => {
-    try {
-      const response = await axios.post(`${apiUrl}/api/checkout`, {
-        items: selectedItems,
-      });
-      console.log("Checkout successful:", response.data);
-      setSelectedItems([]);
-      onProceedToCheckout(selectedItems);
-    } catch (err) {
-      console.error("Error during checkout:", err);
-      setError("Checkout failed. Please try again.");
+  const handleCheckout = () => {
+    if (selectedItems.length === 0) {
+      setError("Please select at least one item to proceed.");
+      return;
     }
+    navigate("/checkout", { state: { selectedItems } });
   };
 
   return (
