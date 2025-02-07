@@ -1,7 +1,6 @@
 import React from 'react';
 import google from "../assets/google.png";
 import logo from "../assets/logo.png";
-import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const handleGoogleLogin = () => {
