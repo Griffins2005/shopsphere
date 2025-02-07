@@ -39,69 +39,71 @@ const ContactUs = () => {
     <div>
       <Banner />
       <Navbar />
-    <div className="contact-container">
-      <div className="form-section">
-        <h2>Contact us</h2>
-        <p>Have a question or need assistance? Feel free to reach out to our friendly customer support team!</p>
-        <form onSubmit={handleSubmit} className="contact-form">
-          <label>
-            Name *
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-          </label>
-          <label>
-            Email address *
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </label>
-          <label>
-            Message *
-            <textarea
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              required
-            />
-          </label>
-          <button type="submit" className="submit-button">Submit form</button>
-        </form>
-      </div>
-      <div className="map-section">
-        <iframe
-          title="Location Map"
-          src="https://www.google.com/maps/place/Times+Square,+New+York,+NY+10036/@40.7580053,-73.9881437,17z/data=!3m1!4b1!4m6!3m5!1s0x89c25855a96da09d:0x860bf5a5e1a00a68!8m2!3d40.7579747!4d-73.9855426!16s%2Fg%2F11bw3fky91?entry=ttu&g_ep=EgoyMDI1MDEwOC4wIKXMDSoASAFQAw%3D%3D"
-          width="100%"
-          height="300"
-          allowFullScreen=""
-          loading="lazy"
-        ></iframe>
-        <div className="social-icons">
-          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-            <i className="fab fa-facebook"></i>
-          </a>
-          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-            <i className="fab fa-twitter"></i>
-          </a>
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-            <i className="fab fa-instagram"></i>
-          </a>
-          <a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
-            <i className="fab fa-youtube"></i>
-          </a>
+      <div className="contact-container">
+        <div className="form-section">
+          <h2>Contact us</h2>
+          <p>Have a question or need assistance? Feel free to reach out to our friendly customer support team!</p>
+          <form onSubmit={handleSubmit} className="contact-form">
+            <label>
+              Name *
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+            </label>
+            <label>
+              Email address *
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </label>
+            <label>
+              Message *
+              <textarea
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                required
+              />
+            </label>
+            <button type="submit" className="submit-button">Submit form</button>
+          </form>
+        </div>
+        <div className="map-section">
+          <iframe
+            title="Location Map"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3021.9369537852984!2d-73.9855426!3d40.757974699999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25855a96da09d%3A0x860bf5a5e1a00a68!2sTimes%20Square!5e0!3m2!1sen!2sus!4v1699988888888!5m2!1sen!2sus"
+            width="100%"
+            height="300"
+            allowFullScreen
+            loading="lazy"
+            style={{ border: 0 }}
+            referrerPolicy="no-referrer-when-downgrade"
+          ></iframe>
+          <div className="social-icons">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+              <i className="fab fa-facebook"></i>
+            </a>
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+              <i className="fab fa-twitter"></i>
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+              <i className="fab fa-instagram"></i>
+            </a>
+            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
+              <i className="fab fa-youtube"></i>
+            </a>
+          </div>
         </div>
       </div>
-    </div>
-    <Footer />
+      <Footer />
     </div>
   );
 };
